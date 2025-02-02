@@ -12,6 +12,7 @@ GUILE_COMPILED_MODULE_DIR ?= $(GUILE_MODULE_DIR)/site-ccache
 
 BINFILES = bin/toobusy-list.scm
 SRCFILES = src/toobusy/util.scm \
+	   src/toobusy/event.scm \
 	   src/toobusy/index.scm \
 	   src/toobusy/search.scm \
 	   src/toobusy.scm
@@ -19,7 +20,7 @@ LIBFILES = $(SRCFILES:%.scm=%.go)
 
 GUILDFLAGS += -Warity-mismatch -Wbad-case-datum -Wduplicate-case-datum \
 	      -Wformat -Wunbound-variable -Wunsupported-warning \
-	      -Wunused-toplevel -Wunused-variable
+	      -Wunused-variable
 GUILDFLAGS += -L src/
 
 all: $(BINFILES) $(LIBFILES)

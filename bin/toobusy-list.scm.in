@@ -2,7 +2,8 @@
 --no-auto-compile -s
 !#
 
-(use-modules (toobusy search))
+(use-modules (toobusy search)
+             (toobusy event))
 
 (define (list-events events)
   (let ((grp (group-events events)))
