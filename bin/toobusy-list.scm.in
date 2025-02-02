@@ -5,7 +5,13 @@
 (use-modules (toobusy search))
 
 (define (list-events events)
-  (for-each event-print events))
+  (let ((grp (group-events events)))
+    (for-each
+      (lambda (events-of-day)
+        (let ((fst-tm (event-start (car events-of-day))))
+          (format #t "## ~a~%" (strftime "%Y-%d-%d" fst-tm))
+          (for-each event-print events-of-day)))
+      grp)))
 
 (define (main . args)
   (unless (eq? (length args) 1)
