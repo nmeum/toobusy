@@ -13,21 +13,6 @@
             get-events
             main))
 
-(define (data-directory)
-  (define (home)
-    (or (getenv "HOME")
-        (error "HOME environment variable is not set")))
-
-  (let* ((data-home (or
-                      (getenv "XDG_DATA_HOME")
-                      (path-join (home) ".local" "share"))))
-    (path-join data-home "toobusy")))
-
-(define (get-database-path)
-  (let ((data-dir (data-directory)))
-    (mkdir-p data-dir)
-    (path-join data-dir "xapian.db")))
-
 (define (get-events files)
   (define (process-file file-path)
     (let* ((port    (open-input-file file-path))
