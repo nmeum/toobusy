@@ -1,0 +1,18 @@
+#!@GUILE@ \
+--no-auto-compile -s
+!#
+
+(use-modules (toobusy search))
+
+(define (list-events events)
+  (for-each event-print events))
+
+(define (main . args)
+  (unless (eq? (length args) 1)
+    (error "invalid amount of arguments"))
+
+  (let* ((query  (car args))
+         (events (search query)))
+    (list-events events)))
+
+(apply main (cdr (command-line)))

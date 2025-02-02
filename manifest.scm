@@ -7,5 +7,6 @@
     "guile-xapian"
     "guile-ics"
 
+    "pdpmake"
     "guile-readline"
     "coreutils-minimal"))
