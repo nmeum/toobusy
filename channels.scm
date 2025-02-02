@@ -1,15 +1,4 @@
 (list (channel
-        (name 'nmeum)
-        (url "https://github.com/nmeum/guix-channel.git")
-        (branch "master")
-        (commit
-          "7f2e77c69f0b0620fd3422d46088c9f9dc4a59cc")
-        (introduction
-          (make-channel-introduction
-            "808a00792c114c5c1662e8b1a51b90a2d23f313a"
-            (openpgp-fingerprint
-              "514E 833A 8861 1207 4F98  F68A E447 3B6A 9C05 755D"))))
-      (channel
         (name 'guix)
         (url "https://git.savannah.gnu.org/git/guix.git")
         (branch "master")
