@@ -10,8 +10,8 @@ GUILE_COMPILED_MODULE_DIR ?= $(GUILE_MODULE_DIR)/site-ccache
 
 ########################################################################
 
-BINFILES = bin/toobusy-list.scm \
-	   bin/toobusy-index.scm
+BINFILES = bin/toobusy-list \
+	   bin/toobusy-index
 SRCFILES = src/toobusy/util.scm \
 	   src/toobusy/event.scm \
 	   src/toobusy/index.scm \
@@ -36,11 +36,11 @@ install:
 clean:
 	rm $(BINFILES) $(LIBFILES)
 
-.scm.in.scm:
+.in:
 	sed "s|@GUILE@|$(GUILE)|" < $< > $@
 	chmod +x $@
 .scm.go:
 	guild compile $(GUILDFLAGS) -o $@ $<
 
 .PHONY: all install clean
-.SUFFIXES: .scm .go .scm.in
+.SUFFIXES: .scm .go .in
