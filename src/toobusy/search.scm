@@ -24,6 +24,6 @@
 
 (define (search query)
   (let ((dbpath (get-database-path)))
-    (call-with-writable-database dbpath
+    (call-with-database dbpath
       (lambda (db)
         (print-entries db query)))))
