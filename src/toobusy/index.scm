@@ -46,7 +46,6 @@
       (document-slot-set! doc DTEND_SLOT (date-time->string dtend))
 
       ;; Actually add the document to the database.
-      (format #t "indexed: ~a~%" doc)
       (replace-document! db id-term doc)))
 
   (for-each index-vevent events))
