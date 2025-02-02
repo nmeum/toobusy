@@ -9,3 +9,5 @@
   (index-files args))
 
 (apply main (cdr (command-line)))
+
+;; vim: ft=scheme

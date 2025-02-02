@@ -8,9 +8,12 @@
   #:use-module (ics property)
 
   #:use-module (xapian xapian)
+  #:use-module (xapian wrap)
+
   #:use-module (srfi srfi-1)
 
-  #:export (find-events
+  #:export (make-query
+            range-query
             search))
 
 (define (date-range slot prefix)
@@ -20,29 +23,42 @@
     #:repeated? #f
     #:prefer-mdy? #f))
 
-(define (find-events db querystr)
+(define (enquire-events db query)
+  (mset-fold
+    (lambda (item xs)
+      (xcons
+        xs
+        (let* ((data    (document-data (mset-item-document item)))
+               (ics-obj (car (ics->scm data))))
+          (make-event
+            (mset-item-docid item)
+            (mset-item-rank item)
+            ics-obj))))
+    '() (enquire-mset (enquire db query)
+                      #:maximum-items 50)))
+
+(define (make-query querystr)
   (let* ((range (list (date-range DTSTART_SLOT "start")
-                      (date-range DTEND_SLOT "end")))
-         (query (parse-query querystr
-                             #:stemmer (make-stem "en")
-                             #:range-processors range
-                             #:prefixes '(("summary" . "S")))))
-    (mset-fold (lambda (item xs)
-                 (xcons
-                   xs
-                   (let* ((data    (document-data (mset-item-document item)))
-                          (ics-obj (car (ics->scm data))))
-                     (make-event
-                       (mset-item-docid item)
-                       (mset-item-rank item)
-                       ics-obj))))
-               '() (enquire-mset (enquire db query)
-                                #:maximum-items 50))))
+                      (date-range DTEND_SLOT "end"))))
+    (parse-query querystr
+                 #:stemmer (make-stem "en")
+                 #:range-processors range
+                 #:prefixes '(("summary" . "S")))))
+
+(define (range-query start-time end-time)
+  (new-Query
+    (Query-OP-VALUE-RANGE)
+    DTSTART_SLOT
+    (strftime "%Y%m%d" start-time)
+    (strftime "%Y%m%d" end-time)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (search query)
-  (let ((dbpath (get-database-path)))
+  (let ((dbpath (get-database-path))
+        (query  (if (string? query)
+                  (make-query query)
+                  query)))
     (call-with-database dbpath
       (lambda (db)
-        (find-events db query)))))
+        (enquire-events db query)))))

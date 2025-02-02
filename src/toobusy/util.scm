@@ -1,10 +1,14 @@
 (define-module (toobusy util)
+  #:use-module (ice-9 copy-tree)
   #:use-module ((srfi srfi-1) #:select (fold fold-right))
+
   #:export (string-empty?
             path-join
             mkdir-p
             data-directory
-            get-database-path))
+            get-database-path
+            mkzoned
+            add-days))
 
 (define (empty-string? str)
   (zero? (string-length str)))
@@ -44,3 +48,11 @@
   (let ((data-dir (data-directory)))
     (mkdir-p data-dir)
     (path-join data-dir "xapian.db")))
+
+(define (mkzoned tm)
+  (mktime tm (or (tm:zone tm) "")))
+
+(define (add-days tm days)
+  (let* ((t (copy-tree tm)))
+    (set-tm:mday t (+ days (tm:mday t)))
+    (cdr (mkzoned t))))

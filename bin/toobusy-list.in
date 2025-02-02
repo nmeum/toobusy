@@ -3,7 +3,56 @@
 !#
 
 (use-modules (toobusy search)
-             (toobusy event))
+             (toobusy event)
+             (toobusy util)
+
+             (srfi srfi-37))
+
+(define start #f)
+(define end   "+7")
+
+(define start-opt
+  (option
+    '(#\s "start") #t #f
+    (lambda (o n x vals)
+      (set! start x)
+      vals)))
+
+(define end-opt
+  (option
+    '(#\e "end") #t #f
+    (lambda (o n x vals)
+      (set! end x)
+      vals)))
+
+(define (parse-args args flags)
+  (reverse
+    (args-fold
+      args
+      flags
+      (lambda (o n x vals)
+        (error "unrecognized option" n))
+     cons
+      '())))
+
+(define (string->tm str)
+  ;; TODO: Make this configurable
+  (define TIME-FMT "%Y-%m-%d")
+
+  (car (strptime TIME-FMT str)))
+
+(define (get-start-time)
+  (if start
+    (string->tm start)
+    (localtime (current-time))))
+
+(define (get-end-time start-tm)
+  (if (eq? #\+ (string-ref end 0))
+    (add-days start-tm (string->number end))
+    ;; TODO: ensure that end time is after start time.
+    (string->tm end)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (list-events events)
   (let ((grp (group-events events)))
@@ -15,11 +64,15 @@
       grp)))
 
 (define (main . args)
-  (unless (eq? (length args) 1)
-    (error "invalid amount of arguments"))
-
-  (let* ((query  (car args))
-         (events (search query)))
-    (list-events events)))
+  (let* ((flags (list start-opt end-opt))
+         (rest  (parse-args args flags)))
+    (unless (null? rest)
+      (error "too many arguments"))
+    (let* ((start  (get-start-time))
+           (query  (range-query start (get-end-time start)))
+           (events (search query)))
+      (list-events events))))
 
 (apply main (cdr (command-line)))
+
+;; vim: ft=scheme
