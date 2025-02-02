@@ -10,7 +10,8 @@ GUILE_COMPILED_MODULE_DIR ?= $(GUILE_MODULE_DIR)/site-ccache
 
 ########################################################################
 
-BINFILES = bin/toobusy-list.scm
+BINFILES = bin/toobusy-list.scm \
+	   bin/toobusy-index.scm
 SRCFILES = src/toobusy/util.scm \
 	   src/toobusy/event.scm \
 	   src/toobusy/index.scm \

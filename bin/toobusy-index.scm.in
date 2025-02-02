@@ -1,0 +1,11 @@
+#!@GUILE@ \
+--no-auto-compile -s
+!#
+
+(use-modules (toobusy index)
+             (toobusy event))
+
+(define (main . args)
+  (index-files args))
+
+(apply main (cdr (command-line)))
