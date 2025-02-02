@@ -1,6 +1,10 @@
 (define-module (toobusy search)
   #:use-module (toobusy util)
 
+  #:use-module (ics)
+  #:use-module (ics object)
+  #:use-module (ics property)
+
   #:use-module (xapian xapian)
   #:export (find-entries
             search))
@@ -15,9 +19,13 @@
 (define (print-entries db querystr)
   (let ((mset (find-entries db querystr)))
     (mset-fold (lambda (item _)
-                 (format #t "~a [#~3,'0d]~%"
-                         (mset-item-rank item)
-                         (mset-item-docid item)))
+                 (let* ((data    (document-data (mset-item-document item)))
+                        (event   (car (ics->scm data)))
+                        (summary (ics-object-property-ref event "SUMMARY")))
+                   (format #t "~a [#~3,'0d] '~a'~%"
+                           (mset-item-rank item)
+                           (mset-item-docid item)
+                           (ics-property-value summary))))
                #f mset)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

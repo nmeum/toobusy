@@ -11,11 +11,6 @@
 
   #:export (index-files))
 
-(define (vevent->string ics)
-  (call-with-output-string
-    (lambda (port)
-      (ics-pretty-print ics port #:indent 0))))
-
 (define (index-vevents db events)
   (define (index-vevent event)
     (let* ((uid      (ics-object-property-ref event "UID"))
@@ -24,7 +19,7 @@
            (dtend    (ics-object-property-ref event "DTEND"))
 
            (id-term  (string-append "Q" (ics-property-value uid)))
-           (doc      (make-document #:data (vevent->string event)
+           (doc      (make-document #:data (scm->ics-string event)
                                     ;; TODO: Why 0?
                                     #:terms `((,id-term . 0))))
            (term-gen (make-term-generator
