@@ -1,5 +1,6 @@
 (define-module (toobusy search)
   #:use-module (toobusy util)
+  #:use-module (toobusy)
 
   #:use-module (ics)
   #:use-module (ics object)
@@ -9,9 +10,19 @@
   #:export (find-entries
             search))
 
+(define (date-range slot prefix)
+  (prefixed-date-range-processor
+    0
+    #:prefix (string-append prefix ":")
+    #:repeated? #f
+    #:prefer-mdy? #f))
+
 (define (find-entries db querystr)
-  (let* ((query (parse-query querystr
+  (let* ((range (list (date-range DTSTART_SLOT "start")
+                      (date-range DTEND_SLOT "end")))
+         (query (parse-query querystr
                              #:stemmer (make-stem "en")
+                             #:range-processors range
                              #:prefixes '(("summary" . "S")))))
     (enquire-mset (enquire db query)
                   #:maximum-items 50)))

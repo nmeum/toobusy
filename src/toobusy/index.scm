@@ -1,5 +1,6 @@
 (define-module (toobusy index)
   #:use-module (toobusy util)
+  #:use-module (toobusy)
 
   #:use-module (ics)
   #:use-module (ics object)
@@ -10,6 +11,14 @@
   #:use-module ((srfi srfi-1) #:select (concatenate))
 
   #:export (index-files))
+
+;; Convert a date-time ICS typed property to a string value
+;; which can be used with a Xapian DateRangeProcessor query.
+;;
+;; See https://xapian.org/docs/valueranges.html#daterangeprocessor
+(define (date-time->string prop)
+  (let ((t (ics-property->typed-property prop)))
+    (strftime "%Y%m%d" (ics-property-value t))))
 
 (define (index-vevents db events)
   (define (index-vevent event)
@@ -33,12 +42,8 @@
       ;; (increase-termpos! term-gen)
 
       ;; Store the dtstart/dtend as values for a ValueRange search.
-      (let ((date-time->string
-              (lambda (prop)
-                (let ((t (ics-property->typed-property prop)))
-                  (strftime "%s" (ics-property-value t))))))
-        (document-slot-set! doc 0 (date-time->string dtstart))
-        (document-slot-set! doc 1 (date-time->string dtend)))
+      (document-slot-set! doc DTSTART_SLOT (date-time->string dtstart))
+      (document-slot-set! doc DTEND_SLOT (date-time->string dtend))
 
       ;; Actually add the document to the database.
       (format #t "indexed: ~a~%" doc)
