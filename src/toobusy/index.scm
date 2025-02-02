@@ -1,4 +1,5 @@
 (define-module (toobusy index)
+  #:use-module (toobusy util)
 
   #:use-module (ics)
   #:use-module (ics object)
@@ -6,8 +7,9 @@
   #:use-module (ics type property)
 
   #:use-module (xapian xapian)
+  #:use-module ((srfi srfi-1) #:select (concatenate))
 
-  #:export (index-vevents))
+  #:export (index-files))
 
 (define (vevent->string ics)
   (call-with-output-string
@@ -48,3 +50,18 @@
       (replace-document! db id-term doc)))
 
   (for-each index-vevent events))
+
+(define (get-events files)
+  (define (process-file file-path)
+    (let* ((port    (open-input-file file-path))
+           (ics-obj (car (ics->scm port))))
+      (ics-object-components ics-obj)))
+
+  (concatenate (map process-file files)))
+
+(define (index-files files)
+  (let ((events (get-events files))
+        (dbpath (get-database-path)))
+    (call-with-writable-database dbpath
+     (lambda (db)
+       (index-vevents db events)))))
