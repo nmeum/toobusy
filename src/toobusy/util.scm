@@ -5,8 +5,6 @@
   #:export (string-empty?
             path-join
             mkdir-p
-            data-directory
-            get-database-path
             mkzoned
             add-days))
 
@@ -33,21 +31,6 @@
           (mkdir new-path))
         new-path))
     "/" (string-split path #\/)))
-
-(define (data-directory)
-  (define (home)
-    (or (getenv "HOME")
-        (error "HOME environment variable is not set")))
-
-  (let* ((data-home (or
-                      (getenv "XDG_DATA_HOME")
-                      (path-join (home) ".local" "share"))))
-    (path-join data-home "toobusy")))
-
-(define (get-database-path)
-  (let ((data-dir (data-directory)))
-    (mkdir-p data-dir)
-    (path-join data-dir "xapian.db")))
 
 (define (mkzoned tm)
   (mktime tm (or (tm:zone tm) "")))
