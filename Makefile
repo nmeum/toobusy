@@ -12,12 +12,11 @@ GUILE_COMPILED_MODULE_DIR ?= $(GUILE_MODULE_DIR)/site-ccache
 
 BINFILES = bin/toobusy-list \
 	   bin/toobusy-index
-SRCFILES = src/toobusy/util.scm \
-	   src/toobusy/event.scm \
-	   src/toobusy/index.scm \
-	   src/toobusy/search.scm \
-	   src/toobusy.scm
-LIBFILES = $(SRCFILES:%.scm=%.go)
+LIBFILES = src/toobusy/util.go \
+	   src/toobusy/event.go \
+	   src/toobusy/index.go \
+	   src/toobusy/search.go \
+	   src/toobusy/toobusy.go
 
 GUILDFLAGS += -Warity-mismatch -Wbad-case-datum -Wduplicate-case-datum \
 	      -Wformat -Wunbound-variable -Wunsupported-warning \
@@ -26,15 +25,13 @@ GUILDFLAGS += -L src/
 
 all: $(BINFILES) $(LIBFILES)
 install:
-	install -Dm644 $(SRCFILES) -t "$(GUILE_MODULE_DIR)/toobusy"
-	install -Dm644 $(LIBFILES) -t "$(GUILE_COMPILED_MODULE_DIR)/toobusy"
-	mv "$(GUILE_MODULE_DIR)/toobusy/toobusy.scm" \
-		"$(GUILE_MODULE_DIR)/toobusy.scm"
-	mv "$(GUILE_COMPILED_MODULE_DIR)/toobusy/toobusy.go" \
-		"$(GUILE_COMPILED_MODULE_DIR)/toobusy.go"
+	install -Dm644 $(LIBFILES) \
+		-t "$(GUILE_COMPILED_MODULE_DIR)/toobusy"
+	install -Dm644 $(SRCFILES:%.go=%.scm) \
+		-t "$(GUILE_MODULE_DIR)/toobusy"
 	install -Dm755 $(BINFILES) -t "$(DESTDIR)$(BINDIR)/"
 clean:
-	rm $(BINFILES) $(LIBFILES)
+	rm -f $(BINFILES) $(LIBFILES)
 
 .in:
 	sed "s|@GUILE@|$(GUILE)|" < $< > $@

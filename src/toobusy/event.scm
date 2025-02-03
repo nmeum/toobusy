@@ -1,6 +1,6 @@
 (define-module (toobusy event)
   #:use-module (toobusy util)
-  #:use-module (toobusy)
+  #:use-module (toobusy toobusy)
 
   #:use-module (ics)
   #:use-module (ics object)
