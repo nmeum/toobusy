@@ -46,7 +46,7 @@
 
 (define (event-before? event other)
   (define (tm->time tm)
-    (car (mktime tm (or (tm:zone tm) ""))))
+    (car (mkzoned tm)))
 
   (let* ((time1 (tm->time (event-start event)))
          (time2 (tm->time (event-start other))))
