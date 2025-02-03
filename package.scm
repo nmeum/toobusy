@@ -2,6 +2,7 @@
              (guix gexp)
              (guix build utils)
              (guix build-system gnu)
+             (gnu packages guile)
              (gnu packages guile-xyz)
              ((guix licenses) #:prefix license:))
 
@@ -12,6 +13,7 @@
                       #:recursive? #t))
   (propagated-inputs
     (list
+      guile-3.0
       guile-xapian
       guile-ics))
   (build-system gnu-build-system)
@@ -20,9 +22,12 @@
       #:tests? #f
       #:make-flags
       #~(list
-        (string-append "PREFIX = " #$output))
+          (string-append "PREFIX = " #$output))
       #:phases
       #~(modify-phases %standard-phases
+          (add-before 'build 'setenv
+            (lambda _
+              (setenv "GUILE" (which "guile"))))
           (delete 'configure))))
   (synopsis "notmuch but for calendars")
   (description "")
