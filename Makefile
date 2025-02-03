@@ -17,6 +17,7 @@ LIBFILES = src/toobusy/xdg.go \
 	   src/toobusy/event.go \
 	   src/toobusy/index.go \
 	   src/toobusy/search.go \
+	   src/toobusy/config.go \
 	   src/toobusy/toobusy.go
 
 GUILDFLAGS += -Warity-mismatch -Wbad-case-datum -Wduplicate-case-datum \

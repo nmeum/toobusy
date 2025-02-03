@@ -3,6 +3,7 @@
 !#
 
 (use-modules (toobusy search)
+             (toobusy config)
              (toobusy event)
              (toobusy util)
 
@@ -36,10 +37,7 @@
       '())))
 
 (define (string->tm str)
-  ;; TODO: Make this configurable
-  (define TIME-FMT "%Y-%m-%d")
-
-  (car (strptime TIME-FMT str)))
+  (car (strptime (config-date-format %config) str)))
 
 (define (get-start-time)
   (if start
@@ -59,7 +57,8 @@
     (for-each
       (lambda (events-of-day)
         (let ((fst-tm (event-start (car events-of-day))))
-          (format #t "## ~a~%" (strftime "%Y-%d-%d" fst-tm))
+          (format #t "## ~a~%"
+                  (strftime (config-date-format %config) fst-tm))
           (for-each event-print events-of-day)))
       grp)))
 
@@ -73,6 +72,7 @@
            (events (search query)))
       (list-events events))))
 
+(load-config!)
 (apply main (cdr (command-line)))
 
 ;; vim: ft=scheme
