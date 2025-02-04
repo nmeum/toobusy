@@ -7,24 +7,20 @@
              (toobusy event)
              (toobusy util)
 
+             (srfi srfi-1)
              (srfi srfi-37))
-
-(define start #f)
-(define end   "+7")
 
 (define start-opt
   (option
     '(#\s "start") #t #f
     (lambda (o n x vals)
-      (set! start x)
-      vals)))
+      (alist-cons 'start-time x vals))))
 
 (define end-opt
   (option
     '(#\e "end") #t #f
     (lambda (o n x vals)
-      (set! end x)
-      vals)))
+      (alist-cons 'end-time x vals))))
 
 (define (parse-args args flags)
   (reverse
@@ -33,22 +29,27 @@
       flags
       (lambda (o n x vals)
         (error "unrecognized option" n))
-     cons
+      cons
       '())))
+
+(define (opt-val opts opt)
+  (let ((p (assoc opt opts)))
+    (if p (cdr p) p)))
 
 (define (string->tm str)
   (car (strptime (config-date-format %config) str)))
 
-(define (get-start-time)
-  (if start
-    (string->tm start)
+(define (get-start-time opt)
+  (if opt
+    (string->tm opt)
     (localtime (current-time))))
 
-(define (get-end-time start-tm)
-  (if (eq? #\+ (string-ref end 0))
-    (add-days start-tm (string->number end))
-    ;; TODO: ensure that end time is after start time.
-    (string->tm end)))
+(define (get-end-time opt start-tm)
+  (let ((end-opt (or opt "+7")))
+    (if (eq? #\+ (string-ref end-opt 0))
+      (add-days start-tm (string->number end-opt))
+      ;; TODO: ensure that end-opt time is after start time.
+      (string->tm end-opt))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -64,11 +65,9 @@
 
 (define (main . args)
   (let* ((flags (list start-opt end-opt))
-         (rest  (parse-args args flags)))
-    (unless (null? rest)
-      (error "too many arguments"))
-    (let* ((start  (get-start-time))
-           (query  (range-query start (get-end-time start)))
+         (opts  (parse-args args flags)))
+    (let* ((start  (get-start-time (opt-val opts 'start-time)))
+           (query  (range-query start (get-end-time (opt-val opts 'end-time) start)))
            (events (search query)))
       (list-events events))))
 
