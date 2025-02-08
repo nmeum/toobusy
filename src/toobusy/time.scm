@@ -1,6 +1,7 @@
 (define-module (toobusy time)
   #:use-module (toobusy config)
   #:use-module (toobusy util)
+  #:use-module (ice-9 copy-tree)
 
   #:export (mkzoned
             tm->time

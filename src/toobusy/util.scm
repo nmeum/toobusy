@@ -1,5 +1,4 @@
 (define-module (toobusy util)
-  #:use-module (ice-9 copy-tree)
   #:use-module (ice-9 string-fun)
   #:use-module ((srfi srfi-1) #:select (fold fold-right))
 
