@@ -1,5 +1,6 @@
 (define-module (toobusy event)
   #:use-module (toobusy util)
+  #:use-module (toobusy time)
   #:use-module (toobusy toobusy)
 
   #:use-module (ics)
@@ -45,12 +46,7 @@
   (%event-tm "DTEND" event))
 
 (define (event-before? event other)
-  (define (tm->time tm)
-    (car (mkzoned tm)))
-
-  (let* ((time1 (tm->time (event-start event)))
-         (time2 (tm->time (event-start other))))
-    (< time1 time2)))
+  (tm-before? (event-start event) (event-start other)))
 
 ;; Check if the event is on the same date or after.
 (define (event-after? event other)

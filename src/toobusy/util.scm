@@ -7,17 +7,15 @@
             path-join
             home-directory
             xdg-dir
-            mkdir-p
-            mkzoned
-            add-days))
+            mkdir-p))
 
-(define (empty-string? str)
+(define (string-empty? str)
   (zero? (string-length str)))
 
 (define (path-join . elems)
   (fold-right
     (lambda (elem path)
-      (if (empty-string? path)
+      (if (string-empty? path)
         elem
         (string-append elem "/" path)))
     "" elems))
@@ -57,12 +55,3 @@
           (mkdir new-path))
         new-path))
     "/" (string-split path #\/)))
-
-(define (mkzoned tm)
-  (mktime tm (or (tm:zone tm) "")))
-
-(define (add-days tm days)
-  (let* ((t (copy-tree tm)))
-    (set-tm:mday t (+ days (tm:mday t)))
-    (cdr (mkzoned t))))
-

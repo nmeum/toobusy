@@ -6,6 +6,7 @@
              (toobusy config)
              (toobusy event)
              (toobusy util)
+             (toobusy time)
 
              (srfi srfi-1)
              (srfi srfi-37))
@@ -36,20 +37,15 @@
   (let ((p (assoc opt opts)))
     (if p (cdr p) p)))
 
-(define (string->tm str)
-  (car (strptime (config-date-format %config) str)))
-
 (define (get-start-time opt)
   (if opt
     (string->tm opt)
     (localtime (current-time))))
 
 (define (get-end-time opt start-tm)
-  (let ((end-opt (or opt "+7")))
-    (if (eq? #\+ (string-ref end-opt 0))
-      (add-days start-tm (string->number end-opt))
-      ;; TODO: ensure that end-opt time is after start time.
-      (string->tm end-opt))))
+  (let ((opt (or opt "+7")))
+    (or (reltime->tm start-tm opt)
+        (string->tm opt))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -58,8 +54,7 @@
     (for-each
       (lambda (events-of-day)
         (let ((fst-tm (event-start (car events-of-day))))
-          (format #t "## ~a~%"
-                  (strftime (config-date-format %config) fst-tm))
+          (format #t "## ~a~%" (tm->string fst-tm))
           (for-each event-print events-of-day)))
       grp)))
 
@@ -67,9 +62,8 @@
   (let* ((flags (list start-opt end-opt))
          (opts  (parse-args args flags)))
     (let* ((start  (get-start-time (opt-val opts 'start-time)))
-           (query  (range-query start (get-end-time (opt-val opts 'end-time) start)))
-           (events (search query)))
-      (list-events events))))
+           (end    (get-end-time (opt-val opts 'end-time) start)))
+      (list-events (search (range-query start end))))))
 
 (load-config!)
 (apply main (cdr (command-line)))

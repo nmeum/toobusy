@@ -13,6 +13,7 @@ GUILE_COMPILED_MODULE_DIR ?= $(GUILE_MODULE_DIR)/site-ccache
 BINFILES = bin/toobusy-list \
 	   bin/toobusy-index
 LIBFILES = src/toobusy/util.go \
+	   src/toobusy/time.go \
 	   src/toobusy/event.go \
 	   src/toobusy/index.go \
 	   src/toobusy/search.go \
