@@ -14,6 +14,7 @@ BINFILES = bin/toobusy-list \
 	   bin/toobusy-index
 LIBFILES = src/toobusy/util.go \
 	   src/toobusy/time.go \
+	   src/toobusy/color.go \
 	   src/toobusy/event.go \
 	   src/toobusy/index.go \
 	   src/toobusy/search.go \
