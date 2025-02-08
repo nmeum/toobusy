@@ -1,6 +1,5 @@
 (define-module (toobusy toobusy)
   #:use-module (toobusy util)
-  #:use-module (toobusy xdg)
 
   #:export (DTSTART_SLOT
             DTEND_SLOT
@@ -10,4 +9,4 @@
 (define DTEND_SLOT 1)
 
 (define (get-database-path)
-  (path-join (xdg-dir 'data-home) "xapian.db"))
+  (path-join (xdg-dir "XDG_DATA_HOME") "xapian.db"))
