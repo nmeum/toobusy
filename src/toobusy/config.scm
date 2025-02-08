@@ -7,6 +7,7 @@
   #:export (config?
             config
             config-date-format
+            config-list-delta
 
             %config
             load-config!)
@@ -15,13 +16,16 @@
   #:declarative? #f)
 
 (define-record-type <config>
-  (make-config date-format)
+  (make-config date-format list-delta)
   config?
-  (date-format config-date-format))
+  (date-format config-date-format)
+  (list-delta config-list-delta))
 
 (define* (config #:key
-                 (date-format "%Y-%m-%d"))
-  (make-config date-format))
+                 (date-format "%Y-%m-%d")
+                 (list-delta 7))
+  (make-config date-format
+               (string-append "+" (number->string list-delta))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

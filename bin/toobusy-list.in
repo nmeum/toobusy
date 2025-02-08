@@ -43,7 +43,7 @@
     (localtime (current-time))))
 
 (define (get-end-time opt start-tm)
-  (let ((opt (or opt "+7")))
+  (let ((opt (or opt (config-list-delta %config))))
     (or (reltime->tm start-tm opt)
         (string->tm opt))))
 
