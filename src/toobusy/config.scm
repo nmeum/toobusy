@@ -7,6 +7,7 @@
   #:export (config?
             config
             config-date-format
+            config-list-heading
             config-list-delta
 
             %config
@@ -16,15 +17,19 @@
   #:declarative? #f)
 
 (define-record-type <config>
-  (make-config date-format list-delta)
+  (make-config date-format list-heading list-delta)
   config?
   (date-format config-date-format)
+  (list-heading config-list-heading)
   (list-delta config-list-delta))
 
+;; TODO: Define sanitizers.
 (define* (config #:key
                  (date-format "%Y-%m-%d")
+                 (list-heading '(BOLD))
                  (list-delta 7))
   (make-config date-format
+               list-heading
                (string-append "+" (number->string list-delta))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
