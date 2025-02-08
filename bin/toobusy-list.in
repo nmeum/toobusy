@@ -46,23 +46,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (list-events events)
-  (let ((grp (group-events events)))
-    (for-each
-      (lambda (events-of-day)
-        (let ((fst-tm (event-start (car events-of-day))))
-          (colorized-display (tm->string fst-tm)
-                             (config-list-heading %config))
-          (newline)
-          (for-each event-print events-of-day)))
-      grp)))
-
 (define (main . args)
   (let* ((flags (list start-opt end-opt))
          (opts  (parse-args args flags)))
     (let* ((start  (get-start-time (assq-ref opts 'start-time)))
            (end    (get-end-time (assq-ref opts 'end-time) start)))
-      (list-events (search (range-query start end))))))
+      (display-events (search (range-query start end))))))
 
 (load-config!)
 (apply main (cdr (command-line)))

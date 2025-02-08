@@ -2,6 +2,8 @@
   #:use-module (toobusy util)
   #:use-module (toobusy time)
   #:use-module (toobusy toobusy)
+  #:use-module (toobusy color)
+  #:use-module (toobusy config)
 
   #:use-module (ics)
   #:use-module (ics object)
@@ -19,8 +21,9 @@
             event-end
             event-before?
             event-after?
-            event-print
-            group-events))
+            group-events
+            display-event
+            display-events))
 
 ;; TODO: If we want/need the file path, then we need to store that in the
 ;; database. However, since multiple VEVENTs may be stored in the same file it
@@ -52,15 +55,6 @@
 (define (event-after? event other)
   (not (event-before? event other)))
 
-(define* (event-print event #:optional (port (current-output-port)))
-  (let* ((ics-obj (event-ics event))
-         (summary (ics-object-property-ref ics-obj "SUMMARY")))
-    (format port
-            "~a [~a] '~a'~%"
-            (event-docid event)
-            (event-rank event)
-            (ics-property-value summary))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (group-events events)
@@ -74,3 +68,23 @@
             (cons (cons event (car xs)) (cdr xs))
             (cons (list event) xs)))))
     '() (sort events event-before?)))
+
+(define* (display-event event #:optional (port (current-output-port)))
+  (let* ((ics-obj (event-ics event))
+         (summary (ics-object-property-ref ics-obj "SUMMARY")))
+    (format port
+            "~a [~a] '~a'~%"
+            (event-docid event)
+            (event-rank event)
+            (ics-property-value summary))))
+
+(define* (display-events events #:optional (port (current-output-port)))
+  (let ((grp (group-events events)))
+    (for-each
+      (lambda (events-of-day)
+        (let ((fst-tm (event-start (car events-of-day))))
+          (colorized-display (tm->string fst-tm)
+                             (config-list-heading %config))
+          (newline)
+          (for-each display-event events-of-day)))
+      grp)))
