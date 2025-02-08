@@ -33,10 +33,6 @@
       cons
       '())))
 
-(define (opt-val opts opt)
-  (let ((p (assoc opt opts)))
-    (if p (cdr p) p)))
-
 (define (get-start-time opt)
   (if opt
     (string->tm opt)
@@ -61,8 +57,8 @@
 (define (main . args)
   (let* ((flags (list start-opt end-opt))
          (opts  (parse-args args flags)))
-    (let* ((start  (get-start-time (opt-val opts 'start-time)))
-           (end    (get-end-time (opt-val opts 'end-time) start)))
+    (let* ((start  (get-start-time (assq-ref opts 'start-time)))
+           (end    (get-end-time (assq-ref opts 'end-time) start)))
       (list-events (search (range-query start end))))))
 
 (load-config!)
