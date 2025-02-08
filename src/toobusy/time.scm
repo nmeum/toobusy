@@ -17,8 +17,8 @@
 (define (tm->time tm)
   (car (mkzoned tm)))
 
-(define (tm->string tm)
-  (strftime (config-date-format %config) tm))
+(define* (tm->string tm #:optional fmt)
+  (strftime (or fmt (config-date-format %config)) tm))
 
 (define (add-days tm days)
   (let* ((t (copy-tree tm)))

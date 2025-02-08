@@ -83,8 +83,10 @@
     (for-each
       (lambda (events-of-day)
         (let ((fst-tm (event-start (car events-of-day))))
-          (colorized-display (tm->string fst-tm)
-                             (config-list-heading %config))
-          (newline)
+          (format port
+                  "~a~%"
+                  (colorize-string
+                    (tm->string fst-tm (config-list-dayfmt %config))
+                    (config-list-heading %config)))
           (for-each display-event events-of-day)))
       grp)))

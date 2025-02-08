@@ -7,7 +7,6 @@
              (toobusy event)
              (toobusy util)
              (toobusy time)
-             (toobusy color)
 
              (srfi srfi-1)
              (srfi srfi-37))
