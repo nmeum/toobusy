@@ -30,7 +30,7 @@ all: $(BINFILES) $(LIBFILES)
 install:
 	install -Dm644 $(LIBFILES) \
 		-t "$(GUILE_COMPILED_MODULE_DIR)/toobusy"
-	install -Dm644 $(SRCFILES:%.go=%.scm) \
+	install -Dm644 $(LIBFILES:%.go=%.scm) \
 		-t "$(GUILE_MODULE_DIR)/toobusy"
 	install -Dm755 $(BINFILES) -t "$(DESTDIR)$(BINDIR)/"
 clean:
