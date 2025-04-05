@@ -4,12 +4,14 @@ This is an unfinished experiment for implementing a [notmuch]-like command-line 
 
 ## Status
 
-This is presently an unfinished proof-of-concept. Ideally, I would like to
-rewrite this in a statically typed language like Haskell or Rust. However, I
-would first have to write Xapian bindings for such a language and presently I
-am not motivated enough to do so. Further, properly implementing this in Guile
-requires improving the [guile-ics] library. For instance, this library is
-presently lacking proper support for reoccurring events.
+This is presently an unfinished proof-of-concept prototype. Ideally, I would
+like to rewrite this in a statically typed language like Haskell or Rust.
+However, I would first have to write [Xapian] bindings for such a language and
+presently I am not motivated enough to do so. Further, properly implementing
+this in Guile requires improving the [guile-ics] library. For instance, this
+library is presently lacking proper support for recurring events. Essentially,
+making progress on this project requires working on either an [RFC 5545][rfc
+5545] or [Xapian] library and neither seems particularly "fun" right now.
 
 ## Development Setup
 
@@ -29,3 +31,4 @@ Presently, this is supposed to be installed via [Guix]:
 [Guix]: https://guix.gnu.org
 [notmuch]: https://notmuchmail.org/
 [rfc 5545]: https://datatracker.ietf.org/doc/html/rfc5545
+[Xapian]: http://www.xapian.org/
