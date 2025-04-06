@@ -54,7 +54,10 @@
   (define (process-file file-path)
     (let* ((port    (open-input-file file-path))
            (ics-obj (car (ics->scm port))))
-      (ics-object-components ics-obj)))
+      (filter
+        (lambda (c)
+          (equal? (ics-object-name c) "VEVENT"))
+        (ics-object-components ics-obj))))
 
   (concatenate (map process-file files)))
 
