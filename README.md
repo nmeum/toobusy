@@ -13,12 +13,19 @@ presently lacking proper support for reoccurring events.
 
 ## Development Setup
 
-```
-$ guix time-machine -C channels.scm -- shell
-[env] $ guile -L src -s ./bin/toobusy-index samples/*.ics
-[env] $ guile -L src -s ./bin/toobusy-list -s 01-01-1000 -e 01-01-3000
-```
+Requires a working [Guix] installation:
+
+	$ guix time-machine -C channels.scm -- shell
+	[env] $ guile -L src -s ./bin/toobusy-index samples/*.ics
+	[env] $ guile -L src -s ./bin/toobusy-list -s 01-01-1000 -e 01-01-3000
+
+## Installation
+
+Presently, this is supposed to be installed via [Guix]:
+
+	$ guix time-machine -C channels.scm -- package -f package.scm
 
 [guile-ics]: https://github.com/artyom-poptsov/guile-ics
+[Guix]: https://guix.gnu.org
 [notmuch]: https://notmuchmail.org/
 [rfc 5545]: https://datatracker.ietf.org/doc/html/rfc5545
