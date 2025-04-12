@@ -11,7 +11,8 @@ GUILE_COMPILED_MODULE_DIR ?= $(GUILE_MODULE_DIR)/site-ccache
 ########################################################################
 
 BINFILES = bin/toobusy-list \
-	   bin/toobusy-index
+	   bin/toobusy-index \
+	   bin/toobusy-search
 LIBFILES = src/toobusy/util.go \
 	   src/toobusy/time.go \
 	   src/toobusy/color.go \

@@ -20,6 +20,7 @@ Requires a working [Guix] installation:
 	$ guix time-machine -C channels.scm -- shell
 	[env] $ guile -L src -s ./bin/toobusy-index samples/*.ics
 	[env] $ guile -L src -s ./bin/toobusy-list -s 01-01-1000 -e 01-01-3000
+	[env] $ guile -L src -s ./bin/toobusy-search party
 
 ## Installation
 

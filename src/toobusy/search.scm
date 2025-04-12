@@ -14,6 +14,7 @@
 
   #:export (make-query
             range-query
+            search-query
             search))
 
 (define (date-range slot prefix)
@@ -52,13 +53,12 @@
     (strftime "%Y%m%d" start-time)
     (strftime "%Y%m%d" end-time)))
 
+(define (search-query query)
+  (make-query query))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (search query)
-  (let ((dbpath (get-database-path))
-        (query  (if (string? query)
-                  (make-query query)
-                  query)))
-    (call-with-database dbpath
-      (lambda (db)
-        (enquire-events db query)))))
+  (call-with-database (get-database-path)
+    (lambda (db)
+      (enquire-events db query))))

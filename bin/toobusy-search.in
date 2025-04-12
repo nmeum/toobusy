@@ -1,0 +1,17 @@
+#!@GUILE@ \
+--no-auto-compile -s
+!#
+
+(use-modules (toobusy search)
+             (toobusy config)
+             (toobusy event))
+
+(define (main . args)
+  (if (null? args)
+    (error "missing query argument")
+    (display-events (search (search-query (car args))))))
+
+(load-config!)
+(apply main (cdr (command-line)))
+
+;; vim: ft=scheme
